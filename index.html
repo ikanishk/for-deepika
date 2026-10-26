@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta property="og:title" content="A play, written for one reader">
+<meta property="og:description" content="Tonight. One performance only.">
+<title>A Play for Deepika</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=IM+Fell+English+SC&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<style>
+/* Layout: a proscenium. Velvet curtains close over the screen at first, part and gather at the sides; one playbill page sits centre stage and changes scene by scene. Single deliberate theme. */
+:root{
+  --stage:#1c1522;
+  --velvet:#7a1628;
+  --velvet-hi:#a02338;
+  --velvet-deep:#3a0812;
+  --paper:#ece4d4;
+  --ink:#232a3f;
+  --ink-soft:#5b5f70;
+  --gold:#c39a45;
+  --gold-deep:#8a6a28;
+  --rule:#c9bda5;
+  --display:"IM Fell English SC","Iowan Old Style",Georgia,serif;
+  --fell:"IM Fell English","Iowan Old Style",Georgia,serif;
+  --body:"EB Garamond",Garamond,"Times New Roman",serif;
+  --drape:clamp(22px,7vw,96px);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--stage);color:var(--ink);font-family:var(--body);font-size:19px;line-height:1.55;
+  background-image:radial-gradient(ellipse 60% 50% at 50% 4%, rgba(195,154,69,.26), transparent 70%),
+                   linear-gradient(transparent 85%, rgba(0,0,0,.35));
+  padding-left:max(calc(var(--drape) + 10px), env(safe-area-inset-left,0px));
+  padding-right:max(calc(var(--drape) + 10px), env(safe-area-inset-right,0px));
+  padding-block:clamp(72px,10vh,96px) 48px;overflow-x:hidden;min-height:100vh;
+}
+.stage{max-width:640px;margin:0 auto}
+.lamp{text-align:center;font-family:var(--display);color:var(--gold);letter-spacing:.3em;font-size:.72rem;margin-bottom:14px;opacity:.85}
+.bill{
+  background:var(--paper);border-radius:2px;padding:clamp(24px,6vw,52px) clamp(18px,6vw,48px);
+  box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 0 1px var(--rule), inset 0 0 0 7px var(--paper), inset 0 0 0 8px var(--rule);
+}
+.scene{display:flex;flex-direction:column;gap:18px;animation:fadeup .8s ease both}
+@keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.eyebrow{font-family:var(--display);letter-spacing:.22em;font-size:.78rem;color:var(--gold-deep);text-align:center}
+h1,h2{font-family:var(--display);font-weight:400;color:var(--ink);text-align:center;margin:0;text-wrap:balance;line-height:1.1}
+h1{font-size:clamp(2.1rem,8.5vw,3.3rem)}
+h2{font-size:clamp(1.6rem,6vw,2.2rem)}
+.fleuron{text-align:center;color:var(--gold);font-size:1.2rem;letter-spacing:.6em}
+p{margin:0}
+.c{text-align:center}
+.dir{font-family:var(--fell);font-style:italic;color:var(--ink-soft)}
+.dir::before{content:"[ "}.dir::after{content:" ]"}
+.speaker{font-family:var(--display);letter-spacing:.12em;font-size:.85rem;color:var(--velvet);display:block;margin-bottom:2px}
+blockquote{margin:0;padding:6px 0 6px 18px;border-left:2px solid var(--gold);font-family:var(--fell);font-size:1.1rem}
+blockquote cite{display:block;font-family:var(--body);font-style:normal;font-size:.85rem;color:var(--ink-soft);margin-top:6px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+button{
+  font:inherit;font-family:var(--display);letter-spacing:.14em;font-size:.95rem;cursor:pointer;
+  border:1px solid var(--ink);background:transparent;color:var(--ink);padding:12px 22px;border-radius:1px;
+  transition:background .25s,color .25s,border-color .25s,transform .3s;
+}
+button:hover{background:var(--ink);color:var(--paper)}
+button:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+button.primary{background:var(--velvet);border-color:var(--velvet);color:var(--paper)}
+button.primary:hover{background:var(--velvet-deep);border-color:var(--velvet-deep)}
+button:disabled{opacity:.35;cursor:not-allowed}
+a.btn{font-family:var(--display);letter-spacing:.14em;font-size:.9rem;text-decoration:none;color:var(--paper);background:var(--ink);border:1px solid var(--ink);padding:12px 18px;text-align:center}
+a.btn:hover{background:var(--velvet);border-color:var(--velvet)}
+a.btn:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+
+/* the question */
+.ask{font-family:var(--fell);font-size:clamp(1.9rem,7.5vw,2.9rem);text-align:center;line-height:1.15;text-wrap:balance}
+.ask em{color:var(--velvet)}
+.arena{position:relative;height:250px;border-top:1px dotted var(--rule);border-bottom:1px dotted var(--rule);touch-action:manipulation;overflow:hidden}
+.arena button{position:absolute;white-space:nowrap}
+#yes{left:26%;top:50%;transform:translate(-50%,-50%) scale(var(--grow,1));z-index:2;padding:14px 30px;font-size:1.05rem;transition:transform .6s cubic-bezier(.22,1,.36,1),background .25s}
+#no{left:72%;top:50%;transform:translate(-50%,-50%) scale(var(--shrink,1)) rotate(var(--tilt,0deg));
+  transition:left .55s cubic-bezier(.22,1,.36,1),top .55s cubic-bezier(.22,1,.36,1),transform .55s cubic-bezier(.22,1,.36,1),background .8s,color .8s,border-color .8s,opacity .4s}
+#no:not(.primary):hover{background:transparent;color:var(--ink)}
+#no.fading{opacity:0}
+.taunt{min-height:3.4em;font-family:var(--fell);font-style:italic;text-align:center;color:var(--velvet);transition:opacity .35s}
+.taunt.hide{opacity:0}
+.footnote{font-size:.78rem;color:var(--ink-soft);text-align:center;border-top:1px solid var(--rule);padding-top:10px}
+
+/* repertoire */
+.rep{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))}
+.play{text-align:left;font-family:var(--body);letter-spacing:0;font-size:.98rem;padding:14px 16px;display:flex;flex-direction:column;gap:4px;line-height:1.4}
+.play strong{font-family:var(--display);font-weight:400;letter-spacing:.08em;font-size:1.05rem}
+.play .kind{font-family:var(--display);letter-spacing:.18em;font-size:.68rem;color:var(--velvet)}
+.play i{color:var(--ink-soft)}
+.play:hover i,.play:hover .kind{color:inherit}
+.play.sel{background:var(--velvet);border-color:var(--velvet);color:var(--paper)}
+.play.sel i,.play.sel .kind{color:var(--paper)}
+
+/* calendar */
+.label{font-family:var(--display);letter-spacing:.16em;font-size:.78rem;color:var(--ink-soft)}
+.days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{font-family:var(--body);letter-spacing:0;padding:8px 2px;display:flex;flex-direction:column;align-items:center;line-height:1.15;font-size:.8rem}
+.day b{font-family:var(--display);font-weight:400;font-size:1.35rem}
+.day small{font-size:.64rem;letter-spacing:.08em;text-transform:uppercase}
+.day.sel,.slot.sel{background:var(--velvet);border-color:var(--velvet);color:var(--paper)}
+.slots{display:grid;gap:8px}
+.slot{text-align:left;font-family:var(--body);letter-spacing:0;font-size:1rem;padding:12px 16px;display:grid;grid-template-columns:7rem minmax(0,1fr);gap:12px;align-items:baseline}
+.slot strong{font-family:var(--display);font-weight:400;letter-spacing:.08em}
+.slot i{opacity:.8}
+@media (max-width:480px){.slot{grid-template-columns:1fr;gap:0}.day{padding:6px 0}.day b{font-size:1.05rem}.days{gap:4px}}
+input[type=text]{font:inherit;font-family:var(--body);font-size:1.05rem;color:var(--ink);background:transparent;border:0;border-bottom:1px solid var(--ink);padding:6px 2px;width:100%;border-radius:0}
+input[type=text]:focus{outline:none;border-bottom-color:var(--velvet);border-bottom-width:2px}
+.field{display:flex;flex-direction:column;gap:8px}
+
+/* ticket */
+.ticket{border:1.5px dashed var(--velvet);padding:22px 18px;text-align:center;display:flex;flex-direction:column;gap:6px}
+.ticket .admit{font-family:var(--display);letter-spacing:.4em;color:var(--velvet);font-size:1.3rem}
+.ticket .row{font-family:var(--fell);font-size:1.12rem}
+.ticket small{font-family:var(--display);letter-spacing:.2em;color:var(--ink-soft);font-size:.72rem}
+.send{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr))}
+.copied{font-size:.85rem;color:var(--ink-soft);text-align:center;min-height:1.3em;overflow-wrap:anywhere}
+
+.foot{text-align:center;margin-top:18px;font-family:var(--display);letter-spacing:.2em;font-size:.7rem;color:var(--gold);opacity:.75}
+.progress{display:flex;justify-content:center;gap:8px;margin-top:20px}
+.progress i{width:6px;height:6px;border-radius:50%;background:#4a3d4f}
+.progress i.on{background:var(--gold)}
+
+/* ===== The curtains ===== */
+.curtain{
+  position:fixed;top:0;bottom:0;width:50.5vw;z-index:20;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.25), transparent 18%, transparent 70%, rgba(0,0,0,.55)),
+    repeating-linear-gradient(90deg,
+      var(--velvet-deep) 0%, var(--velvet) 2.6%, var(--velvet-hi) 4.2%, var(--velvet) 5.8%, var(--velvet-deep) 8.4%);
+  background-size:100% 100%, 100% 100%;
+  box-shadow:inset 0 0 40px rgba(0,0,0,.5);
+  transition:width 2.2s cubic-bezier(.66,0,.2,1);
+}
+.curtain.l{left:0;box-shadow:inset -18px 0 30px rgba(0,0,0,.55), 8px 0 30px rgba(0,0,0,.6)}
+.curtain.r{right:0;box-shadow:inset 18px 0 30px rgba(0,0,0,.55), -8px 0 30px rgba(0,0,0,.6)}
+/* tie-back sash, appears once gathered */
+.curtain::after{content:"";position:absolute;top:58%;left:-4px;right:-4px;height:14px;
+  background:linear-gradient(var(--gold),var(--gold-deep));box-shadow:0 3px 8px rgba(0,0,0,.5);opacity:0;transition:opacity .8s 1.8s}
+body.open .curtain{width:var(--drape)}
+body.open .curtain::after{opacity:1}
+.valance{position:fixed;top:0;left:0;right:0;height:calc(44px + env(safe-area-inset-top,0px));z-index:23;pointer-events:none;
+  background:repeating-linear-gradient(90deg,var(--velvet-deep) 0 3%,var(--velvet) 3% 6%);
+  box-shadow:0 8px 20px rgba(0,0,0,.6)}
+.valance::after{content:"";position:absolute;left:0;right:0;bottom:-14px;height:14px;
+  background:radial-gradient(circle at 50% 0, var(--gold) 0 6px, transparent 7px) 0 0/22px 14px repeat-x}
+.valance::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--gold)}
+/* the marquee shown on the closed curtain */
+.marquee{position:fixed;inset:0;z-index:22;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:22px;
+  text-align:center;padding:24px max(24px, env(safe-area-inset-left,0px));transition:opacity .6s}
+.marquee .card{background:rgba(28,21,34,.72);border:1px solid var(--gold);outline:1px solid rgba(195,154,69,.4);outline-offset:6px;
+  padding:28px clamp(20px,5vw,44px);display:flex;flex-direction:column;gap:12px;max-width:440px}
+.marquee .pre{font-family:var(--display);letter-spacing:.32em;font-size:.75rem;color:var(--gold)}
+.marquee .name{font-family:var(--display);font-size:clamp(2.6rem,11vw,4rem);color:var(--paper);line-height:1}
+.marquee .sub{font-family:var(--fell);font-style:italic;color:#d9cdb4;font-size:1.05rem}
+.marquee button{background:var(--gold);border-color:var(--gold);color:var(--velvet-deep);align-self:center}
+.marquee button:hover{background:var(--paper);border-color:var(--paper);color:var(--velvet-deep)}
+body.open .marquee{opacity:0;pointer-events:none}
+body:not(.open) .stage{visibility:hidden}
+
+
+/* music toggle */
+.music{position:fixed;z-index:24;right:calc(var(--drape) + 12px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));
+  background:rgba(28,21,34,.85);border:1px solid var(--gold);color:var(--gold);font-size:.75rem;letter-spacing:.18em;padding:10px 14px;display:flex;gap:8px;align-items:center}
+.music:hover{background:var(--gold);color:var(--velvet-deep)}
+.music .bars{display:inline-flex;gap:2px;align-items:flex-end;height:12px}
+.music .bars i{width:2px;background:currentColor;height:4px;animation:eq 1s ease-in-out infinite alternate}
+.music .bars i:nth-child(2){animation-delay:.3s}.music .bars i:nth-child(3){animation-delay:.6s}
+.music.off .bars i{animation:none;height:2px}
+@keyframes eq{to{height:12px}}
+body:not(.open) .music{display:none}
+/* wild geese crossing the stage */
+.geese{position:fixed;left:0;top:calc(70px + env(safe-area-inset-top,0px));z-index:19;pointer-events:none;width:min(150px,32vw);opacity:0;transform:translateX(-30vw)}
+.geese path{fill:none;stroke:var(--gold);stroke-width:1.6;stroke-linecap:round}
+.geese.fly{animation:migrate 11s linear forwards}
+.geese.fly g{animation:flap .9s ease-in-out infinite alternate}
+@keyframes migrate{0%{opacity:0;transform:translate(-30vw,30px)}8%{opacity:.9}90%{opacity:.9}100%{opacity:0;transform:translate(115vw,-40px)}}
+@keyframes flap{from{transform:scaleY(1)}to{transform:scaleY(.55)}}
+.geese g{transform-box:fill-box;transform-origin:center}
+@media (prefers-reduced-motion:reduce){.curtain,#no,#yes{transition:none}.scene{animation:none}.geese{display:none}}
+</style>
+
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<div class="curtain l" aria-hidden="true"></div>
+<div class="curtain r" aria-hidden="true"></div>
+<div class="valance" aria-hidden="true"></div>
+<svg class="geese" id="geese" viewBox="110 0 110 70" aria-hidden="true"><g><path d="M192 35 Q196 30 200 35 Q204 30 208 35"/></g><g><path d="M168 25 Q172 20 176 25 Q180 20 184 25"/></g><g><path d="M168 45 Q172 40 176 45 Q180 40 184 45"/></g><g><path d="M144 16 Q148 11 152 16 Q156 11 160 16"/></g><g><path d="M144 54 Q148 49 152 54 Q156 49 160 54"/></g><g><path d="M120 8 Q124 3 128 8 Q132 3 136 8"/></g><g><path d="M120 62 Q124 57 128 62 Q132 57 136 62"/></g></svg>
+<div class="marquee" id="marquee">
+  <div class="card">
+    <span class="pre">TONIGHT · ONE PERFORMANCE ONLY</span>
+    <span class="name">Deepika</span>
+    <span class="sub">a small play, written for one reader</span>
+    <button id="raise">Raise the curtain</button>
+  </div>
+</div>
+
+<button class="music" id="music" aria-pressed="true"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="musicLabel">MUSIC ON</span></button>
+<main class="stage">
+  <div class="lamp">THE THEATRE OF ONE READER</div>
+  <article class="bill" id="bill" aria-live="polite"></article>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <div class="foot">NO UNDERSTUDIES · NO REFUNDS · NO “NO”</div>
+</main>
+
+<script>
+/* ===== Edit these ===== */
+const HER   = "Deepika";
+const HIM   = "Kanishk";
+const EMAIL = "kanishkpandey34@gmail.com"; // the calendar invite adds this address as a guest
+const TZ    = "Asia/Kolkata";
+/* ====================== */
+
+const bill = document.getElementById('bill');
+const prog = document.getElementById('progress');
+const state = { acts:["coffee"], day:null, slot:null, place:"" };
+let scene = 0;
+
+const REPERTOIRE = [
+  {id:"coffee",  kind:"THE OPENING ACT", title:"Coffee",            line:"After Sartre and de Beauvoir, who did their best arguing at a café table."},
+  {id:"dinner",  kind:"A FULL PRODUCTION", title:"Dinner",          line:"A moveable feast. Two courses, three opinions, and dessert as the denouement."},
+  {id:"movie",   kind:"THE ADAPTATION",  title:"A movie",           line:"Followed by the eternal debate: was the book better? (It usually was.)"},
+  {id:"books",   kind:"THE LIBRARY SCENE", title:"A bookstore wander", line:"We each pick a book for the other. Borges imagined paradise as a library; this is a start."},
+  {id:"theatre", kind:"THE PLAY'S THE THING", title:"A play or a show", line:"Hamlet staged one to catch a king's conscience. We'd just go to enjoy it."},
+  {id:"walk",    kind:"THE NATURALISTS", title:"A long walk",       line:"Somewhere green, paying attention the way Mary Oliver did. Extra points if there are geese."},
+  {id:"surprise",kind:"DEUS EX MACHINA", title:"Surprise me",       line:"The playwright descends from the rafters with a plan. Trust the plot."}
+];
+
+const SLOTS = [
+  {id:"morning",  label:"Morning",      h:10, m:30, line:"Mrs Dalloway said she would buy the flowers herself."},
+  {id:"afternoon",label:"Afternoon",    h:16, m:0,  line:"Wilde's hour for tea and better conversation."},
+  {id:"evening",  label:"Evening",      h:18, m:30, line:"When the evening is spread out against the sky."},
+  {id:"night",    label:"Late evening", h:20, m:0,  line:"“Tender is the night,” said Keats, and Fitzgerald borrowed it."}
+];
+
+const TAUNTS = [
+  "Hmm. The No seems to have stage fright.",
+  "Hamlet deliberated for five acts. You don't have that kind of time.",
+  "Elizabeth Bennet said no once too. Look how that turned out.",
+  "Prufrock hesitated for an entire poem. Don't be Prufrock.",
+  "“The lady doth protest too much, methinks.”",
+  "Wilde said the only way to get rid of a temptation is to yield to it.",
+  "One must imagine the No button tired.",
+  "The narrator reminds you this is a comedy, not a tragedy.",
+  "Godot never arrived. The No button won't either.",
+  "Mary Oliver's geese never circle back to say no. They just fly home."
+];
+
+const pad = n => String(n).padStart(2,'0');
+// Dates open the day after her exams end (23 Nov 2026) and run three weeks
+const FIRST_DAY = new Date(2026, 10, 24); // months are 0-based: 10 = November
+const DAYS = (()=>{const o=[];for(let i=0;i<21;i++){const x=new Date(FIRST_DAY);x.setDate(FIRST_DAY.getDate()+i);o.push(x)}return o})();
+const fmtLong = d => d.toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long'});
+const fmtTime = s => `${s.h>12?s.h-12:s.h}:${pad(s.m)} ${s.h>=12?'pm':'am'}`;
+const esc = s => s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function actsText(){
+  const t = state.acts.map(id=>REPERTOIRE.find(r=>r.id===id).title.toLowerCase());
+  return t.length<=1 ? (t[0]||"coffee") : t.slice(0,-1).join(", ")+" and "+t[t.length-1];
+}
+
+const scenes = [
+  /* 0 · Welcome */
+  () => `
+  <div class="scene">
+    <p class="eyebrow">WELCOME TO THE THEATRE</p>
+    <h1>Deepika,<br>this one's for you</h1>
+    <p class="fleuron">❦</p>
+    <blockquote>It is a truth universally acknowledged, that a man in possession of a good book must be in want of someone to argue about it with.<cite>Not quite Jane Austen, <i>Pride and Prejudice</i></cite></blockquote>
+    <p class="c">Tonight's programme is short and unrehearsed. It was written by someone who has run out of literary excuses to keep talking to you.</p>
+    <p class="dir c">Please silence your phone. Actually, keep it close. You'll need it at the end.</p>
+    <div class="actions"><button class="primary" data-next>Begin the prologue</button></div>
+  </div>`,
+
+  /* 1 · Prologue */
+  () => `
+  <div class="scene">
+    <p class="eyebrow">PROLOGUE</p>
+    <h2>In Which a Man Gets to the Point</h2>
+    <p class="dir">${HIM} enters stage left, holding a script he has clearly rewritten several times.</p>
+    <p><span class="speaker">${HIM.toUpperCase()}</span>
+    We've talked about plays and poems, and whether any philosopher was ever actually happy. Somewhere along the way I stopped keeping count of the books and started keeping count of the conversations.</p>
+    <blockquote>“All the world's a stage, and all the men and women merely players.”<cite>Shakespeare, <i>As You Like It</i></cite></blockquote>
+    <p><span class="speaker">${HIM.toUpperCase()}</span>
+    If that's true, I'd like one scene with you that isn't on a screen. Montaigne wrote essays to find out what he thought. I made a website. Same idea, worse prose.</p>
+    <p><span class="speaker">${HIM.toUpperCase()}</span>
+    I also know your favourite poem is <i>Wild Geese</i>. Mary Oliver tells you that you don't have to earn your place, that the world keeps calling you home anyway. Her geese never ask permission before they fly. I'm not that brave, so I'm asking.</p>
+    <p class="dir">A skein of wild geese crosses the back of the stage. Nobody comments on it.</p>
+    <div class="actions"><button data-next>Act I: The Question</button></div>
+  </div>`,
+
+  /* 2 · The question */
+  () => `
+  <div class="scene">
+    <p class="eyebrow">ACT I</p>
+    <p class="ask">Deepika, would you go on a <em>date</em> with me?</p>
+    <div class="arena" id="arena">
+      <button class="primary" id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
+    <p class="taunt" id="taunt"></p>
+    <p class="footnote">¹ The editors are not responsible for the behaviour of the second button.</p>
+  </div>`,
+
+  /* 3 · Repertoire */
+  () => `
+  <div class="scene">
+    <p class="eyebrow">ACT II</p>
+    <h2>The Repertoire</h2>
+    <p class="c">Tonight's company can stage any of the following. Pick one, or two for a double bill.</p>
+    <div class="rep" role="group" aria-label="Kind of date">
+      ${REPERTOIRE.map(r=>`<button class="play ${state.acts.includes(r.id)?'sel':''}" data-act="${r.id}" aria-pressed="${state.acts.includes(r.id)}">
+        <span class="kind">${r.kind}</span><strong>${r.title}</strong><i>${r.line}</i></button>`).join('')}
+    </div>
+    <div class="actions"><button class="primary" data-next ${state.acts.length?'':'disabled'}>Act III: The Date</button></div>
+  </div>`,
+
+  /* 4 · Calendar */
+  () => `
+  <div class="scene">
+    <p class="eyebrow">ACT III</p>
+    <h2>The Assignation</h2>
+    <p class="c">Every good play needs a date and a setting. ${actsText()[0].toUpperCase()+actsText().slice(1)} it is; now choose the when.</p>
+    <p class="dir c">The season opens after your exams. No rehearsals during finals; even Shakespeare's company closed for the plague.</p>
+    <div class="field">
+      <span class="label">CHOOSE A DAY · 24 NOVEMBER TO 14 DECEMBER</span>
+      <div class="days" role="group" aria-label="Day">
+        ${DAYS.map((d,i)=>`<button class="day ${state.day===i?'sel':''}" data-day="${i}" aria-pressed="${state.day===i}">
+          <small>${d.toLocaleDateString('en-IN',{weekday:'short'})}</small><b>${d.getDate()}</b><small>${d.toLocaleDateString('en-IN',{month:'short'})}</small></button>`).join('')}
+      </div>
+    </div>
+    <div class="field">
+      <span class="label">CHOOSE AN HOUR</span>
+      <div class="slots" role="group" aria-label="Time">
+        ${SLOTS.map(s=>`<button class="slot ${state.slot===s.id?'sel':''}" data-slot="${s.id}" aria-pressed="${state.slot===s.id}">
+          <strong>${s.label}</strong><span>${fmtTime(s)} · <i>${s.line}</i></span></button>`).join('')}
+      </div>
+    </div>
+    <div class="field">
+      <label class="label" for="place">THE SETTING (OPTIONAL)</label>
+      <input type="text" id="place" placeholder="A place you like, or leave it to me" value="${esc(state.place)}">
+    </div>
+    <div class="actions">
+      <button data-go="3">Back to the repertoire</button>
+      <button class="primary" id="confirm" ${state.day===null||!state.slot?'disabled':''}>Print the ticket</button>
+    </div>
+  </div>`,
+
+  /* 5 · Ticket */
+  () => {
+    const d = DAYS[state.day], s = SLOTS.find(x=>x.id===state.slot);
+    const where = state.place.trim() || "Venue to be decided";
+    return `
+  <div class="scene">
+    <p class="eyebrow">CURTAIN CALL</p>
+    <h2>A Comedy, After All</h2>
+    <p class="c" style="font-family:var(--fell);font-style:italic">Shakespeare's comedies all end the same way: two people finally meet.</p>
+    <div class="ticket">
+      <span class="admit">ADMIT TWO</span>
+      <span class="row">Deepika &amp; ${HIM}</span>
+      <span class="row">${actsText()[0].toUpperCase()+actsText().slice(1)}</span>
+      <span class="row"><i>${fmtLong(d)}</i> · ${fmtTime(s)}</span>
+      <small>${esc(where).toUpperCase()} · NON-TRANSFERABLE</small>
+    </div>
+    <p class="c">One last step: send the ticket to the playwright, so he knows to show up.</p>
+    <div class="send">
+      <a class="btn" href="${gcal(d,s,where)}" target="_blank" rel="noopener">Add to Google Calendar</a>
+      <a class="btn" href="https://wa.me/?text=${encodeURIComponent(msg(d,s,where))}" target="_blank" rel="noopener">Send on WhatsApp</a>
+      <button id="copy">Copy the reply</button>
+    </div>
+    <p class="copied" id="copied"></p>
+    <p class="dir c">Exeunt, pursued by no bear. Overhead, the geese.</p>
+    <div class="actions"><button data-go="4">Change the date</button></div>
+  </div>`;}
+];
+
+function msg(d,s,where){
+  return `Yes 🎭 ${actsText()[0].toUpperCase()+actsText().slice(1)} on ${fmtLong(d)}, ${fmtTime(s)}. Setting: ${where}. — Deepika`;
+}
+function gcal(d,s,where){
+  const st = `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}T${pad(s.h)}${pad(s.m)}00`;
+  const e = new Date(d); e.setHours(s.h, s.m+120);
+  const en = `${e.getFullYear()}${pad(e.getMonth()+1)}${pad(e.getDate())}T${pad(e.getHours())}${pad(e.getMinutes())}00`;
+  const p = new URLSearchParams({
+    action:"TEMPLATE",
+    text:`Deepika & ${HIM}: ${actsText()}`,
+    dates:`${st}/${en}`, ctz:TZ,
+    details:"A play in three acts, final scene. Bring a book opinion.",
+    location: where==="Venue to be decided" ? "" : where,
+    add: EMAIL
+  });
+  return "https://calendar.google.com/calendar/render?"+p.toString();
+}
+
+function render(i, keepScroll){
+  const y = window.scrollY;
+  scene = i;
+  bill.innerHTML = scenes[i]();
+  prog.innerHTML = Array.from({length:6},(_,k)=>`<i class="${k<=i?'on':''}"></i>`).join('');
+  if(keepScroll) window.scrollTo(0,y); else if(i>0) window.scrollTo({top:0,behavior:'smooth'});
+  if(i===2) setupDodge();
+}
+
+/* ---- The No that cannot be pressed ---- */
+const CHASE_MS = 6000;   // how long the chase lasts before No gives in
+const MIN_DODGES = 6;
+const COOLDOWN = 450;    // ms between escapes, so it glides instead of jittering
+
+function setupDodge(){
+  const arena = document.getElementById('arena');
+  const no = document.getElementById('no');
+  const yes = document.getElementById('yes');
+  const taunt = document.getElementById('taunt');
+  let dodges=0, start=null, last=0, surrendered=false;
+
+  function say(t){ taunt.classList.add('hide'); setTimeout(()=>{ taunt.textContent=t; taunt.classList.remove('hide'); },220); }
+
+  function flee(px,py){
+    const now = performance.now();
+    if(surrendered || now-last < COOLDOWN) return;
+    last = now; if(start===null) start = now;
+    const a = arena.getBoundingClientRect(), nb = no.getBoundingClientRect(), yb = yes.getBoundingClientRect();
+    const w = nb.width/2+10, h = nb.height/2+10;
+    const cx = nb.left+nb.width/2-a.left, cy = nb.top+nb.height/2-a.top;
+    let best=null, bestScore=-Infinity;
+    for(let k=0;k<30;k++){
+      const x = w + Math.random()*(a.width-2*w), y = h + Math.random()*(a.height-2*h);
+      const ax=a.left+x, ay=a.top+y;
+      const overYes = ax>yb.left-w && ax<yb.right+w && ay>yb.top-h && ay<yb.bottom+h;
+      if(overYes) continue;
+      const fromPtr = Math.hypot(ax-px, ay-py);
+      const travel = Math.hypot(x-cx, y-cy);
+      // far from the pointer, but not a teleport across the whole stage
+      const score = Math.min(fromPtr,260) - Math.max(0,travel-220)*0.8;
+      if(score>bestScore){bestScore=score; best={x,y}}
+    }
+    if(!best) return;
+    no.style.left = best.x+'px'; no.style.top = best.y+'px';
+    no.style.setProperty('--tilt', (Math.random()*16-8).toFixed(1)+'deg');
+    dodges++;
+    say(TAUNTS[Math.min(dodges-1, TAUNTS.length-1)]);
+    yes.style.setProperty('--grow', (1+Math.min(dodges,8)*0.07).toFixed(2));
+    no.style.setProperty('--shrink', Math.max(1-dodges*0.05, 0.7).toFixed(2));
+    if(dodges>=MIN_DODGES && now-start>=CHASE_MS) setTimeout(surrender, 700);
+  }
+
+  function surrender(){
+    if(surrendered) return; surrendered = true;
+    say("The No button collapses, exhausted, and changes its lines.");
+    no.classList.add('fading');
+    setTimeout(()=>{
+      no.textContent = "Fine. Yes.";
+      no.style.setProperty('--tilt','0deg');
+      no.style.setProperty('--shrink','1');
+      no.classList.add('primary');
+      no.classList.remove('fading');
+    }, 900);
+  }
+
+  arena.addEventListener('pointermove', e=>{
+    if(surrendered || e.pointerType==='touch') return;
+    const b = no.getBoundingClientRect();
+    const cx=b.left+b.width/2, cy=b.top+b.height/2;
+    if(Math.hypot(e.clientX-cx, e.clientY-cy) < Math.max(b.width,b.height)*0.95) flee(e.clientX,e.clientY);
+  });
+  no.addEventListener('touchstart', e=>{
+    if(surrendered) return;
+    e.preventDefault(); const t=e.touches[0]; last=0; flee(t.clientX,t.clientY);
+  }, {passive:false});
+  no.addEventListener('pointerdown', e=>{
+    if(surrendered || e.pointerType==='touch') return;
+    e.preventDefault(); last=0; flee(e.clientX,e.clientY);
+  });
+  no.addEventListener('focus', ()=>{ if(!surrendered){ yes.focus(); }});
+  no.addEventListener('click', e=>{ e.preventDefault(); sayYes(taunt); });
+  yes.addEventListener('click', ()=>sayYes(taunt));
+}
+function sayYes(taunt){
+  taunt.classList.add('hide');
+  setTimeout(()=>{ taunt.textContent="She said yes. Somewhere, the wild geese turn for home."; flyGeese(); taunt.classList.remove('hide'); },200);
+  setTimeout(()=>render(3), 1500);
+}
+
+
+/* ===== A slow jazz ballad, played live by the browser ===== */
+const Jazz = (()=>{
+  let ctx, master, timer, on=false, started=false;
+  const BPM = 64, beat = 60/BPM;
+  const mtof = m => 440*Math.pow(2,(m-69)/12);
+  // 8 bars in F: Fmaj9 | Dm9 | Gm9 | C13 | Am7 | D7b9 | Gm9 | C7b9
+  const CHORDS = [
+    {root:41, v:[57,60,64,67]}, {root:38, v:[53,57,60,64]},
+    {root:43, v:[58,62,65,69]}, {root:36, v:[58,62,64,69]},
+    {root:45, v:[55,60,64,67]}, {root:38, v:[54,57,60,63]},
+    {root:43, v:[58,62,65,69]}, {root:36, v:[52,58,61,67]}
+  ];
+  // the tune: [note, beats]; 0 is a rest
+  const TUNE = [
+    [[72,1.5],[69,.5],[67,1],[69,1]],
+    [[65,3],[64,1]],
+    [[69,1],[70,1],[74,2]],
+    [[72,3],[0,1]],
+    [[76,1.5],[74,.5],[72,1],[69,1]],
+    [[66,2],[69,1],[72,1]],
+    [[70,2],[69,1],[67,1]],
+    [[67,2],[0,2]]
+  ];
+  let bar=0, loop=0, nextBar=0;
+
+  function init(){
+    ctx = new (window.AudioContext||window.webkitAudioContext)();
+    master = ctx.createGain(); master.gain.value = 0;
+    const warm = ctx.createBiquadFilter(); warm.type='lowpass'; warm.frequency.value=2600;
+    const verb = ctx.createConvolver();
+    const len = ctx.sampleRate*3.2, ir = ctx.createBuffer(2,len,ctx.sampleRate);
+    for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6)}
+    verb.buffer = ir;
+    const wet = ctx.createGain(); wet.gain.value=.38;
+    master.connect(warm); warm.connect(ctx.destination); warm.connect(verb); verb.connect(wet); wet.connect(ctx.destination);
+  }
+  function piano(t, m, dur, vel){        // mellow, rounded keys
+    const o=ctx.createOscillator(), o2=ctx.createOscillator(), g=ctx.createGain(), f=ctx.createBiquadFilter();
+    o.type='sine'; o.frequency.value=mtof(m);
+    o2.type='triangle'; o2.frequency.value=mtof(m); o2.detune.value=4;
+    f.type='lowpass'; f.frequency.setValueAtTime(1800,t); f.frequency.exponentialRampToValueAtTime(700,t+dur);
+    const g2=ctx.createGain(); g2.gain.value=.35;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vel,t+.02); g.gain.exponentialRampToValueAtTime(vel*.4,t+.8); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(g); o2.connect(g2); g2.connect(g); g.connect(f); f.connect(master);
+    o.start(t); o2.start(t); o.stop(t+dur+.05); o2.stop(t+dur+.05);
+  }
+  function chord(t, notes, dur, vel){ notes.forEach((m,i)=>piano(t+i*.045, m, dur, vel)); } // gently rolled
+  function bass(t, m, dur){
+    const o=ctx.createOscillator(), g=ctx.createGain(), f=ctx.createBiquadFilter();
+    o.type='sine'; o.frequency.value=mtof(m); f.type='lowpass'; f.frequency.value=400;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.5,t+.03); g.gain.exponentialRampToValueAtTime(.18,t+.5); g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+    o.connect(f); f.connect(g); g.connect(master); o.start(t); o.stop(t+dur+.05);
+  }
+  function voice(t, m, dur){             // soft, breathy lead with a slow vibrato
+    const o=ctx.createOscillator(), g=ctx.createGain(), vib=ctx.createOscillator(), vg=ctx.createGain(), f=ctx.createBiquadFilter();
+    o.type='triangle'; o.frequency.value=mtof(m);
+    vib.frequency.value=4.6; vg.gain.setValueAtTime(0,t); vg.gain.linearRampToValueAtTime(mtof(m)*.006,t+Math.min(dur,1)*.8);
+    vib.connect(vg); vg.connect(o.frequency);
+    f.type='lowpass'; f.frequency.value=1500;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(.11,t+.12); g.gain.setValueAtTime(.11,t+Math.max(.15,dur-.2)); g.gain.linearRampToValueAtTime(0,t+dur+.25);
+    o.connect(f); f.connect(g); g.connect(master); o.start(t); vib.start(t); o.stop(t+dur+.3); vib.stop(t+dur+.3);
+  }
+  let noise;
+  function noiseBuf(){ if(noise) return noise; const b=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate),d=b.getChannelData(0); for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1; return noise=b; }
+  function brush(t, vel){
+    const s=ctx.createBufferSource(), f=ctx.createBiquadFilter(), g=ctx.createGain();
+    s.buffer=noiseBuf(); f.type='bandpass'; f.frequency.value=1100; f.Q.value=.5;
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vel,t+.18); g.gain.exponentialRampToValueAtTime(.0001,t+.7);
+    s.connect(f); f.connect(g); g.connect(master); s.start(t); s.stop(t+.75);
+  }
+  function scheduleBar(t){
+    const ch=CHORDS[bar];
+    chord(t, ch.v, beat*3.8, .05);
+    if(Math.random()<.5) chord(t+beat*2.5, ch.v.slice(1), beat*1.4, .03);
+    bass(t, ch.root, beat*1.9); bass(t+beat*2, ch.root+7, beat*1.9);
+    for(let b=0;b<4;b++) brush(t+b*beat, b%2? .035:.018);
+    if(loop%3!==2){                       // the tune sings twice, then the piano breathes alone
+      let x=t; TUNE[bar].forEach(([m,len])=>{ if(m) voice(x, m, len*beat*.95); x+=len*beat; });
+    }
+    bar=(bar+1)%8; if(bar===0) loop++;
+  }
+  function tick(){ while(nextBar < ctx.currentTime+.2){ scheduleBar(nextBar); nextBar += beat*4; } }
+  function fade(to,sec){ const n=ctx.currentTime; master.gain.cancelScheduledValues(n); master.gain.setValueAtTime(master.gain.value,n); master.gain.linearRampToValueAtTime(to,n+sec); }
+  return {
+    start(){
+      try{
+        if(!ctx) init();
+        ctx.resume();
+        if(!started){ started=true; nextBar=ctx.currentTime+.15; timer=setInterval(tick,40); }
+        on=true; fade(.6,4);
+      }catch(_){}
+    },
+    stop(){ if(!ctx) return; on=false; fade(0,1.5); },
+    toggle(){ on? this.stop() : this.start(); return on; },
+    pause(){ if(ctx && on) ctx.suspend(); },
+    resume(){ if(ctx && on) ctx.resume(); }
+  };
+})();
+const musicBtn=document.getElementById('music');
+musicBtn.addEventListener('click',()=>{
+  const now=Jazz.toggle();
+  musicBtn.classList.toggle('off',!now); musicBtn.setAttribute('aria-pressed',now);
+  document.getElementById('musicLabel').textContent = now?'MUSIC ON':'MUSIC OFF';
+});
+document.addEventListener('visibilitychange',()=>{ document.hidden? Jazz.pause() : Jazz.resume(); });
+document.getElementById('raise').addEventListener('click', ()=>{
+  document.body.classList.add('open');
+  Jazz.start();
+  render(0);
+  setTimeout(flyGeese, 1600);
+});
+
+bill.addEventListener('click', e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  if(b.hasAttribute('data-next')) render(scene+1);
+  else if(b.dataset.go){ keepPlace(); render(+b.dataset.go); }
+  else if(b.dataset.act){
+    const id=b.dataset.act, has=state.acts.includes(id);
+    if(has) state.acts = state.acts.filter(x=>x!==id);
+    else { state.acts.push(id); if(state.acts.length>2) state.acts.shift(); }
+    render(3, true);
+  }
+  else if(b.dataset.day!==undefined){ state.day=+b.dataset.day; keepPlace(); render(4,true); }
+  else if(b.dataset.slot){ state.slot=b.dataset.slot; keepPlace(); render(4,true); }
+  else if(b.id==='confirm'){ keepPlace(); render(5); }
+  else if(b.id==='copy'){
+    const d=DAYS[state.day], s=SLOTS.find(x=>x.id===state.slot);
+    const text=msg(d,s,state.place.trim()||"Venue to be decided");
+    const out=document.getElementById('copied');
+    try{
+      navigator.clipboard.writeText(text).then(
+        ()=>out.textContent="Copied. Paste it into a message to "+HIM+".",
+        ()=>out.textContent=text);
+    }catch(_){ out.textContent=text; }
+  }
+});
+function flyGeese(){ const g=document.getElementById('geese'); g.classList.remove('fly'); void g.getBoundingClientRect(); g.classList.add('fly'); }
+function keepPlace(){ const p=document.getElementById('place'); if(p) state.place=p.value; }
+
+render(0);
+</script>
+
+</body>
+</html>
