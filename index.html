@@ -251,6 +251,7 @@ const TAUNTS = [
   "Mary Oliver's geese never circle back to say no. They just fly home."
 ];
 
+let noAttempts = 0;
 const pad = n => String(n).padStart(2,'0');
 // Dates open the day after her exams end (23 Nov 2026) and run three weeks
 const FIRST_DAY = new Date(2026, 10, 24); // months are 0-based: 10 = November
@@ -366,7 +367,8 @@ const scenes = [
       <span class="row"><i>${fmtLong(d)}</i> · ${fmtTime(s)}</span>
       <small>${esc(where).toUpperCase()} · NON-TRANSFERABLE</small>
     </div>
-    <p class="c">One last step: send the ticket to the playwright, so he knows to show up.</p>
+    <p class="c" id="sent" style="color:var(--velvet);font-family:var(--fell);font-style:italic">Sending your ticket to ${HIM}…</p>
+    <p class="c">You can also add it to your calendar or message him directly:</p>
     <div class="send">
       <a class="btn" href="${gcal(d,s,where)}" target="_blank" rel="noopener">Add to Google Calendar</a>
       <a class="btn" href="https://wa.me/?text=${encodeURIComponent(msg(d,s,where))}" target="_blank" rel="noopener">Send on WhatsApp</a>
@@ -441,7 +443,7 @@ function setupDodge(){
     if(!best) return;
     no.style.left = best.x+'px'; no.style.top = best.y+'px';
     no.style.setProperty('--tilt', (Math.random()*16-8).toFixed(1)+'deg');
-    dodges++;
+    dodges++; noAttempts = dodges;
     say(TAUNTS[Math.min(dodges-1, TAUNTS.length-1)]);
     yes.style.setProperty('--grow', (1+Math.min(dodges,8)*0.07).toFixed(2));
     no.style.setProperty('--shrink', Math.max(1-dodges*0.05, 0.7).toFixed(2));
@@ -479,7 +481,23 @@ function setupDodge(){
   no.addEventListener('click', e=>{ e.preventDefault(); sayYes(taunt); });
   yes.addEventListener('click', ()=>sayYes(taunt));
 }
+let yesSent = false;
 function sayYes(taunt){
+  if(!yesSent){
+    yesSent = true;
+    try{
+      fetch("https://formsubmit.co/ajax/"+EMAIL,{
+        method:"POST",
+        headers:{"Content-Type":"application/json","Accept":"application/json"},
+        body:JSON.stringify({
+          _subject:"🎭 Deepika said YES (she's choosing the date now)",
+          _template:"box", _captcha:"false",
+          Answer:"Yes", "Times she tried to catch the No button":String(noAttempts),
+          "Said yes at":new Date().toLocaleString('en-IN',{timeZone:TZ})
+        })
+      }).catch(()=>{});
+    }catch(_){}
+  }
   taunt.classList.add('hide');
   setTimeout(()=>{ taunt.textContent="She said yes. Somewhere, the wild geese turn for home."; flyGeese(); taunt.classList.remove('hide'); },200);
   setTimeout(()=>render(3), 1500);
@@ -610,7 +628,7 @@ bill.addEventListener('click', e=>{
   }
   else if(b.dataset.day!==undefined){ state.day=+b.dataset.day; keepPlace(); render(4,true); }
   else if(b.dataset.slot){ state.slot=b.dataset.slot; keepPlace(); render(4,true); }
-  else if(b.id==='confirm'){ keepPlace(); render(5); }
+  else if(b.id==='confirm'){ keepPlace(); render(5); notify(); }
   else if(b.id==='copy'){
     const d=DAYS[state.day], s=SLOTS.find(x=>x.id===state.slot);
     const text=msg(d,s,state.place.trim()||"Venue to be decided");
@@ -622,6 +640,23 @@ bill.addEventListener('click', e=>{
     }catch(_){ out.textContent=text; }
   }
 });
+/* emails Kanishk her choices when the ticket is printed (FormSubmit) */
+function notify(){
+  const d=DAYS[state.day], s=SLOTS.find(x=>x.id===state.slot), where=state.place.trim()||"Venue to be decided";
+  const out=()=>document.getElementById('sent');
+  fetch("https://formsubmit.co/ajax/"+EMAIL,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","Accept":"application/json"},
+    body:JSON.stringify({
+      _subject:"🎭 Deepika said yes: "+actsText()+" on "+fmtLong(d),
+      _template:"box", _captcha:"false",
+      Answer:"Yes", "Times she tried to catch the No button":String(noAttempts), Plan:actsText(), Date:fmtLong(d), Time:fmtTime(s)+" ("+s.label+")", Setting:where
+    })
+  }).then(r=>r.json()).then(j=>{
+    const ok = j && (j.success===true || j.success==="true");
+    if(out()) out().textContent = ok ? "Your ticket has been sent to "+HIM+" ✓" : "Send it to "+HIM+" with one of the buttons below.";
+  }).catch(()=>{ if(out()) out().textContent = "Send it to "+HIM+" with one of the buttons below."; });
+}
 function flyGeese(){ const g=document.getElementById('geese'); g.classList.remove('fly'); void g.getBoundingClientRect(); g.classList.add('fly'); }
 function keepPlace(){ const p=document.getElementById('place'); if(p) state.place=p.value; }
 
